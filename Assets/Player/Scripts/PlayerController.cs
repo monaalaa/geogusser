@@ -31,28 +31,6 @@ public class PlayerController : MonoBehaviour
         Tile nextTile = boardManager.GetNextTile(currentTile);
         StartCoroutine(JumpToTile(nextTile, steps));
     }
-
-    /*   private IEnumerator JumpToTile(Tile target, int steps)
-       {
-           Vector3 targetPosition = target.transform.position;
-           yield return transform.DOMove(targetPosition, jumpDuration)
-                 .OnComplete(() =>
-                 {
-                     steps--;
-                     if (steps == 0)
-                     {
-                         target.OnLand();  
-                     }
-                     else
-                     {
-                         target.OnPass();
-                         Tile nextTile = boardManager.GetNextTile(target);
-                         StartCoroutine(JumpToTile(nextTile, steps));
-                         target = nextTile;
-                     }
-                 });
-       }*/
-
     private IEnumerator JumpToTile(Tile target, int steps)
     {
         if (steps <= 0) yield break;
@@ -67,6 +45,7 @@ public class PlayerController : MonoBehaviour
 
                 if (steps == 0)
                 {
+                    currentTile = target;
                     target.OnLand();
                 }
                 else

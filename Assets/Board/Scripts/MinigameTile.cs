@@ -11,7 +11,6 @@ public class MinigameTile : Tile
         GameObject selectedMinigame = minigames[randomIndex];
 
         Debug.Log($"Triggered a random minigame: {selectedMinigame.name}");
-
         Instantiate(selectedMinigame, transform.position, Quaternion.identity);
     }
 
