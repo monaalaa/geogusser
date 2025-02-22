@@ -8,11 +8,13 @@ public class GameLifetimeScope : LifetimeScope
     [SerializeField]  EmptyTile emptyTile;
     [SerializeField]  MinigameTile quizTile;
     [SerializeField] PlayerController playerController;
+    private GameManager gameManager;
     protected override void Configure(IContainerBuilder builder)
     {
         builder.Register<GameManager>(Lifetime.Singleton);
+        // builder.Register<RollDiceUI>(Lifetime.Singleton);
+        builder.Register<PlayersManager>(Lifetime.Singleton);
         // builder.Register<MinigameManager>(Lifetime.Singleton);
-        // builder.Register<UIManager>(Lifetime.Singleton);
 
         builder.Register<BoardManager>(Lifetime.Singleton);
 
@@ -24,7 +26,7 @@ public class GameLifetimeScope : LifetimeScope
 
     protected  void Start()
     {
-        var gameManager = Container.Resolve<GameManager>();
+        gameManager = Container.Resolve<GameManager>();
         gameManager.Start();
     }
 }

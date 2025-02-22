@@ -17,7 +17,8 @@ public class MinigameTile : Tile
 
     public override void OnPass()
     {
-        // No specific effect on passing through a MinigameTile     
+        Debug.Log("Player passed through an Minigame tile!");
+
     }
 }
 

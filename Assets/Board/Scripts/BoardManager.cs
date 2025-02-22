@@ -10,6 +10,7 @@ public class BoardManager : MonoBehaviour
     private float spacingBetweenTiles = 0.5f;
 
     private List<Tile> _tiles;
+    private List<Tile> _firstRawTiles = new List<Tile>();
     private MinigameTile _quizTile;
     private EmptyTile _emptyTile;
 
@@ -22,14 +23,18 @@ public class BoardManager : MonoBehaviour
     public void InitializeBoard()
     {
         _tiles = new List<Tile>();
-
-        for (float z = minZPos; z <= maxZPos; z += spacingBetweenTiles)
+        for (float x = minXPos; x <= maxXPos; x += spacingBetweenTiles)
         {
-            for (float x = minXPos; x <= maxXPos; x += spacingBetweenTiles)
+            for (float z = minZPos; z <= maxZPos; z += spacingBetweenTiles)
             {
+                
                 Vector3 position = new Vector3(x, 0, z);
                 Tile tile = CreateTile(position);
                 _tiles.Add(tile);
+                if (z == minZPos)
+                {
+                    _firstRawTiles.Add(tile);
+                }
             }
         }
     }
@@ -63,19 +68,7 @@ public class BoardManager : MonoBehaviour
 
     public Tile GetRandomTileInFirstRaw()
     {
-        var index = Random.Range(0, GetNumberOfTilesInRow());
-        return _tiles[index];
-    }
-    private int GetNumberOfTilesInRow()
-    {
-        if (spacingBetweenTiles <= 0)
-        {
-            Debug.LogError("Spacing must be greater than 0!");
-            return 0;
-        }
-
-        int numberOfTiles = Mathf.FloorToInt((maxXPos - minXPos) / spacingBetweenTiles) + 1;
-
-        return numberOfTiles;
+        var index = Random.Range(0, _firstRawTiles.Count);
+        return _firstRawTiles[index];
     }
 }
