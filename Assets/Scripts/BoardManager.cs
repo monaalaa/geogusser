@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
-     private float minXPos = 0.15f;
-     private float maxXPos = 4.3f;
-     private float minZPos = -30f;
-     private float maxZPos = -18.5f;
-     private float spacingBetweenTiles = 0.5f;
-  
+    private float minXPos = 0.15f;
+    private float maxXPos = 4.3f;
+    private float minZPos = -30f;
+    private float maxZPos = -18.5f;
+    private float spacingBetweenTiles = 0.5f;
+
     private List<Tile> _tiles;
     private MinigameTile _quizTile;
     private EmptyTile _emptyTile;
 
-    public BoardManager( EmptyTile emptyTile, MinigameTile quizTile)
+    public BoardManager(EmptyTile emptyTile, MinigameTile quizTile)
     {
         _emptyTile = emptyTile;
         _quizTile = quizTile;
@@ -23,9 +23,9 @@ public class BoardManager : MonoBehaviour
     {
         _tiles = new List<Tile>();
 
-        for (float x = minXPos; x <= maxXPos; x += spacingBetweenTiles)
+        for (float z = minZPos; z <= maxZPos; z += spacingBetweenTiles)
         {
-            for (float z = minZPos; z <= maxZPos; z += spacingBetweenTiles)
+            for (float x = minXPos; x <= maxXPos; x += spacingBetweenTiles)
             {
                 Vector3 position = new Vector3(x, 0, z);
                 Tile tile = CreateTile(position);
@@ -33,10 +33,9 @@ public class BoardManager : MonoBehaviour
             }
         }
     }
- 
+
     private Tile CreateTile(Vector3 position)
     {
-
         int randomChoice = Random.Range(0, 5);
 
         Tile tile = randomChoice == 0
@@ -47,19 +46,36 @@ public class BoardManager : MonoBehaviour
         return tile;
     }
 
-    public Vector3 GetTilePosition(int steps)
+    public Tile GetNextTile(Tile currentTile)
     {
-        if (steps >= _tiles.Count)
-            return _tiles[0].Position;  
+        int currentIndex = _tiles.IndexOf(currentTile);
 
-        return _tiles[steps].Position;
+        if (currentIndex >= 0)
+        {
+            int nextIndex = (currentIndex + 1) % _tiles.Count;
+
+            return _tiles[nextIndex];
+        }
+
+        Debug.LogError("Current tile not found in the tiles list!");
+        return null;
     }
 
-    public void OnPlayerLandsOnTile(Vector3 targetPosition)
+    public Tile GetRandomTileInFirstRaw()
     {
-        // Check which tile the player landed on and trigger the respective event
-        Tile landedTile = _tiles.Find(tile => tile.Position == targetPosition);
-        landedTile.OnLand();
+        var index = Random.Range(0, GetNumberOfTilesInRow());
+        return _tiles[index];
     }
+    private int GetNumberOfTilesInRow()
+    {
+        if (spacingBetweenTiles <= 0)
+        {
+            Debug.LogError("Spacing must be greater than 0!");
+            return 0;
+        }
 
+        int numberOfTiles = Mathf.FloorToInt((maxXPos - minXPos) / spacingBetweenTiles) + 1;
+
+        return numberOfTiles;
+    }
 }

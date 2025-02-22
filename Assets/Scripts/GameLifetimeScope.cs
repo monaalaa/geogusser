@@ -7,21 +7,24 @@ public class GameLifetimeScope : LifetimeScope
 {
     [SerializeField]  EmptyTile emptyTile;
     [SerializeField]  MinigameTile quizTile;
+    [SerializeField] PlayerController playerController;
     protected override void Configure(IContainerBuilder builder)
     {
-        // Register Game Managers
-        //builder.Register<GameManager>(Lifetime.Singleton);
-        builder.RegisterEntryPoint<GameManager>();
+        builder.Register<GameManager>(Lifetime.Singleton);
         // builder.Register<MinigameManager>(Lifetime.Singleton);
         // builder.Register<UIManager>(Lifetime.Singleton);
 
-        // // Register Player Controller
-        // builder.Register<PlayerController>(Lifetime.Singleton);
-
-        // // Register Tile Prefabs (For example purposes)
+        builder.Register<BoardManager>(Lifetime.Singleton);
 
         builder.RegisterInstance(emptyTile);
         builder.RegisterInstance(quizTile);
-        builder.Register<BoardManager>(Lifetime.Singleton);
+        builder.RegisterComponentInNewPrefab(playerController, Lifetime.Transient);
+        
+    }
+
+    protected  void Start()
+    {
+        var gameManager = Container.Resolve<GameManager>();
+        gameManager.Start();
     }
 }
