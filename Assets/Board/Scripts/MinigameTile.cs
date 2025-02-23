@@ -1,23 +1,27 @@
-
 using UnityEngine;
+using VContainer;
 
 public class MinigameTile : Tile
 {
-    [SerializeField] private GameObject[] minigames;  
+    private const int numberOfMiniGames = 2;
+    private QuizManager _quizManager;
 
+    [Inject]
+    public void Construct(QuizManager quizManager)
+    {
+        _quizManager = quizManager;
+    }
     public override void OnLand()
     {
-        int randomIndex = Random.Range(0, minigames.Length);
-        GameObject selectedMinigame = minigames[randomIndex];
-
-        Debug.Log($"Triggered a random minigame: {selectedMinigame.name}");
-        Instantiate(selectedMinigame, transform.position, Quaternion.identity);
+        int randomIndex = Random.Range(0, numberOfMiniGames);
+        _quizManager.StartQuiz();
+        Debug.Log("Player Land on through an Minigame tile!");
     }
 
     public override void OnPass()
     {
         Debug.Log("Player passed through an Minigame tile!");
-
+        _quizManager.StartQuiz();
     }
 }
 

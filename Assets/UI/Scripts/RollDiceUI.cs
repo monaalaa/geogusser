@@ -13,7 +13,6 @@ public class RollDiceUI : MonoBehaviour
     public void RollDice()
     {
         var steps = Random.Range(1, 7);
-        Debug.Log($"Steps {steps}");
         _playersManager.MovePlayer(steps);
     }
 }

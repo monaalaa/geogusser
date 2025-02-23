@@ -12,16 +12,13 @@ public class GameLifetimeScope : LifetimeScope
     protected override void Configure(IContainerBuilder builder)
     {
         builder.Register<GameManager>(Lifetime.Singleton);
-        // builder.Register<RollDiceUI>(Lifetime.Singleton);
         builder.Register<PlayersManager>(Lifetime.Singleton);
-        // builder.Register<MinigameManager>(Lifetime.Singleton);
-
+        builder.Register<QuizManager>(Lifetime.Singleton);
         builder.Register<BoardManager>(Lifetime.Singleton);
 
         builder.RegisterInstance(emptyTile);
         builder.RegisterInstance(quizTile);
-        builder.RegisterComponentInNewPrefab(playerController, Lifetime.Transient);
-        
+        builder.RegisterInstance(playerController);
     }
 
     protected  void Start()

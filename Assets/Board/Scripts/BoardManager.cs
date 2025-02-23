@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-
-public class BoardManager : MonoBehaviour
+using VContainer;
+using VContainer.Unity;
+public class BoardManager
 {
-    private float minXPos = 0.15f;
-    private float maxXPos = 4.3f;
-    private float minZPos = -30f;
-    private float maxZPos = -18.5f;
+    private float maxXPos = 5f;
+    private float maxZPos = 9f;
     private float spacingBetweenTiles = 0.5f;
 
     private List<Tile> _tiles;
@@ -14,24 +13,27 @@ public class BoardManager : MonoBehaviour
     private MinigameTile _quizTile;
     private EmptyTile _emptyTile;
 
-    public BoardManager(EmptyTile emptyTile, MinigameTile quizTile)
+    private IObjectResolver _objectResolver;
+
+    public BoardManager(EmptyTile emptyTile, MinigameTile quizTile, IObjectResolver objectResolver)
     {
         _emptyTile = emptyTile;
         _quizTile = quizTile;
+        _objectResolver = objectResolver;
     }
 
     public void InitializeBoard()
     {
         _tiles = new List<Tile>();
-        for (float x = minXPos; x <= maxXPos; x += spacingBetweenTiles)
+        for (float x = 0; x <= maxXPos; x += spacingBetweenTiles)
         {
-            for (float z = minZPos; z <= maxZPos; z += spacingBetweenTiles)
+            for (float z = 0; z <= maxZPos; z += spacingBetweenTiles)
             {
                 
                 Vector3 position = new Vector3(x, 0, z);
                 Tile tile = CreateTile(position);
                 _tiles.Add(tile);
-                if (z == minZPos)
+                if (z == 0)
                 {
                     _firstRawTiles.Add(tile);
                 }
@@ -44,8 +46,8 @@ public class BoardManager : MonoBehaviour
         int randomChoice = Random.Range(0, 5);
 
         Tile tile = randomChoice == 0
-            ? Instantiate(_quizTile, position, Quaternion.identity)
-            : Instantiate(_emptyTile, position, Quaternion.identity);
+            ? _objectResolver.Instantiate(_quizTile, position, Quaternion.identity)
+            : _objectResolver.Instantiate(_emptyTile, position, Quaternion.identity);
 
         tile.Initialize(position);
         return tile;

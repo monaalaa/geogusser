@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
-
+using VContainer.Unity;
 public class PlayersManager
 {
     [Inject]
@@ -24,8 +24,7 @@ public class PlayersManager
 
     public void InitPlayer()
     {
-        var player = GameObject.Instantiate(_playerController);
-        objectResolver.Inject(player);
+        var player = objectResolver.Instantiate(_playerController);
         player.SetPlayerInitialPosition();
         _players.Add(player);
     }
