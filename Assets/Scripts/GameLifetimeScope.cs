@@ -1,13 +1,11 @@
-
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using static UnityEngine.ResourceManagement.ResourceProviders.AssetBundleResource;
 
 public class GameLifetimeScope : LifetimeScope
 {
-    [SerializeField]  EmptyTile emptyTile;
-    [SerializeField]  MinigameTile quizTile;
+    [SerializeField] EmptyTile emptyTile;
+    [SerializeField] MinigameTile quizTile;
     [SerializeField] PlayerController playerController;
     [SerializeField] QuizUI QuizUI;
     [SerializeField] BoardType boardType;
@@ -26,7 +24,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterInstance(boardType).As<BoardType>().AsSelf();
     }
 
-    protected  void Start()
+    protected void Start()
     {
         gameManager = Container.Resolve<GameManager>();
         gameManager.Start();

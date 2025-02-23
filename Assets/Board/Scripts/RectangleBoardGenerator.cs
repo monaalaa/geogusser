@@ -9,7 +9,7 @@ public class RectangleBoardGenerator : BoardGenerator
     {
         tilesSpacing = 0.5f;
         base.InitializeBoard();
-        Bounds cameraBounds = GetCameraBounds(currentCamera);
+        Bounds cameraBounds = GetCameraBounds(_currentCamera);
 
         float minX = cameraBounds.min.x;
         float maxX = cameraBounds.max.x;

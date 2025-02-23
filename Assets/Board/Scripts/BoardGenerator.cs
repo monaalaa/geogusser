@@ -2,15 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-
 public abstract class BoardGenerator
 {
+    public abstract Tile GetRandomTileInFirstRaw();
     protected float tilesSpacing;
     protected List<Tile> _tiles;
     protected  IObjectResolver _objectResolver;
-    protected Camera currentCamera;
+    protected Camera _currentCamera;
     private MinigameTile _quizTile;
-    public abstract Tile GetRandomTileInFirstRaw();
     private EmptyTile _emptyTile;
 
     public void InitBoardData(EmptyTile emptyTile, MinigameTile quizTile, IObjectResolver objectResolver)
@@ -22,9 +21,8 @@ public abstract class BoardGenerator
     public virtual void InitializeBoard()
     {
         _tiles = new List<Tile>();
-        currentCamera= Camera.main;
+        _currentCamera= Camera.main;
     }
-
     protected Tile CreateTile(Vector3 position)
     {
         int randomChoice = Random.Range(0, 5);

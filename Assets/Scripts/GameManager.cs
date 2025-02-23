@@ -5,7 +5,6 @@ public class GameManager : IStartable
     private readonly BoardManager _boardManager;
     private readonly PlayersManager _playersManager;
     private readonly QuizManager _quiManager;
-    private readonly RollDiceUI _rollDiceUI;
 
     public GameManager(BoardManager boardManager,
         PlayersManager playersManager,

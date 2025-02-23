@@ -6,10 +6,8 @@ using VContainer;
 public class PlayerController : MonoBehaviour
 {
     [Inject]
-    private BoardManager boardManager;
-
-    private Tile currentTile;
-    private Tile targetTile;
+    private readonly BoardManager _boardManager;
+    private  Tile _currentTile;
 
     [SerializeField]
     private float jumpDuration = 0.5f;
@@ -23,12 +21,12 @@ public class PlayerController : MonoBehaviour
 
     public void SetPlayerInitialPosition()
     {
-        currentTile = boardManager.GetRandomTileInFirstRaw();
-        transform.position = currentTile.Position;
+        _currentTile = _boardManager.GetRandomTileInFirstRaw();
+        transform.position = _currentTile.Position;
     }
     private void MoveMultipleSteps(int steps)
     {
-        Tile nextTile = boardManager.GetNextTile(currentTile);
+        Tile nextTile = _boardManager.GetNextTile(_currentTile);
         StartCoroutine(JumpToTile(nextTile, steps));
     }
     private IEnumerator JumpToTile(Tile target, int steps)
@@ -45,17 +43,15 @@ public class PlayerController : MonoBehaviour
 
                 if (steps == 0)
                 {
-                    currentTile = target;
+                    _currentTile = target;
                     target.OnLand();
                 }
                 else
                 {
                     target.OnPass();
-                    Tile nextTile = boardManager.GetNextTile(target);
+                    Tile nextTile = _boardManager.GetNextTile(target);
                     if (nextTile == null)
                     {
-                        //Note: we need to init the board to be bigger when player reach the end of board and move camera
-                        //To the new position but for simlicity now will debug that player wins
                         Debug.Log("Player wins");
                     }
                     StartCoroutine(JumpToTile(nextTile, steps));

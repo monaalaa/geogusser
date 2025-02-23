@@ -1,10 +1,9 @@
 using System;
-using UnityEngine;
 using VContainer;
 public class BoardManager
 {
-    private BoardGenerator _boardGenerator;
-    private IObjectResolver _objectResolver;
+    private readonly BoardGenerator _boardGenerator;
+    private readonly IObjectResolver _objectResolver;
 
     public BoardManager(EmptyTile emptyTile,
         MinigameTile quizTile,
