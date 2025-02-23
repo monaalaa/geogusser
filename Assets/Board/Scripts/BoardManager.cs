@@ -25,15 +25,22 @@ public class BoardManager
     public void InitializeBoard()
     {
         _tiles = new List<Tile>();
-        for (float x = 0; x <= maxXPos; x += spacingBetweenTiles)
+
+        Bounds cameraBounds = GetCameraBounds(Camera.main);
+
+        float minX = cameraBounds.min.x;
+        float maxX = cameraBounds.max.x;
+        float minZ = cameraBounds.min.z;
+        float maxZ = cameraBounds.max.z;
+
+        for (float x = minX + spacingBetweenTiles; x < maxX; x += spacingBetweenTiles)
         {
-            for (float z = 0; z <= maxZPos; z += spacingBetweenTiles)
+            for (float z = minZ + spacingBetweenTiles; z < maxZ; z += spacingBetweenTiles)
             {
-                
                 Vector3 position = new Vector3(x, 0, z);
                 Tile tile = CreateTile(position);
                 _tiles.Add(tile);
-                if (z == 0)
+                if (z == minZ + spacingBetweenTiles)
                 {
                     _firstRawTiles.Add(tile);
                 }
@@ -72,5 +79,20 @@ public class BoardManager
     {
         var index = Random.Range(0, _firstRawTiles.Count);
         return _firstRawTiles[index];
+    }
+
+    public static Bounds GetCameraBounds(Camera camera)
+    {
+        Vector3 cameraPos = camera.transform.position;
+
+        float height = camera.orthographicSize * 2;
+        float width = height * camera.aspect;
+
+        float minX = cameraPos.x - width / 2;
+        float maxX = cameraPos.x + width / 2;
+        float minZ = cameraPos.z - height / 2;
+        float maxZ = cameraPos.z + height / 2;
+
+        return new Bounds(cameraPos, new Vector3(maxX - minX, height, maxZ - minZ));
     }
 }
