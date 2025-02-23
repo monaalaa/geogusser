@@ -1,4 +1,5 @@
 using UnityEngine;
+using VContainer;
 
 public class QuizManager
 {
@@ -6,6 +7,14 @@ public class QuizManager
     private Quiz textQuiz;
     private const string flagFileName = "FlagQuizData";
     private const string textFileName = "TextQuizData";
+    private const int numberOfMiniGames = 2;
+    private QuizUI quizUI;
+
+    [Inject]
+    private void Construct(QuizUI quiz)
+    {
+        quizUI = quiz;
+    }
     public void InitQuizs()
     {
         flagQuiz = LoadQuizData(flagFileName);
@@ -20,7 +29,6 @@ public class QuizManager
         if (quizJson != null)
         {
             quiz = JsonUtility.FromJson<Quiz>(quizJson.ToString());
-            Debug.Log("Quiz loaded successfully.");
         }
         else
         {
@@ -31,6 +39,7 @@ public class QuizManager
 
     public void StartQuiz()
     {
-        Debug.Log($"{flagQuiz} Start quiz {textQuiz}");
+        int randomIndex = Random.Range(0, numberOfMiniGames);
+        quizUI.SetQuiz(randomIndex == 0 ? flagQuiz : textQuiz);
     }
 }

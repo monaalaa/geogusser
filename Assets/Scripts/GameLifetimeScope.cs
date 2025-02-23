@@ -8,6 +8,7 @@ public class GameLifetimeScope : LifetimeScope
     [SerializeField]  EmptyTile emptyTile;
     [SerializeField]  MinigameTile quizTile;
     [SerializeField] PlayerController playerController;
+    [SerializeField] QuizUI QuizUI;
     private GameManager gameManager;
     protected override void Configure(IContainerBuilder builder)
     {
@@ -19,6 +20,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterInstance(emptyTile);
         builder.RegisterInstance(quizTile);
         builder.RegisterInstance(playerController);
+        builder.RegisterInstance(QuizUI);
     }
 
     protected  void Start()
