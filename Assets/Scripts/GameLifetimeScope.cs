@@ -2,6 +2,7 @@
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using static UnityEngine.ResourceManagement.ResourceProviders.AssetBundleResource;
 
 public class GameLifetimeScope : LifetimeScope
 {
@@ -9,6 +10,7 @@ public class GameLifetimeScope : LifetimeScope
     [SerializeField]  MinigameTile quizTile;
     [SerializeField] PlayerController playerController;
     [SerializeField] QuizUI QuizUI;
+    [SerializeField] BoardType boardType;
     private GameManager gameManager;
     protected override void Configure(IContainerBuilder builder)
     {
@@ -21,6 +23,7 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterInstance(quizTile);
         builder.RegisterInstance(playerController);
         builder.RegisterInstance(QuizUI);
+        builder.RegisterInstance(boardType).As<BoardType>().AsSelf();
     }
 
     protected  void Start()
