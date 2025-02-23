@@ -1,98 +1,49 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using VContainer;
-using VContainer.Unity;
 public class BoardManager
 {
-    private float maxXPos = 5f;
-    private float maxZPos = 9f;
-    private float spacingBetweenTiles = 0.5f;
-
-    private List<Tile> _tiles;
-    private List<Tile> _firstRawTiles = new List<Tile>();
-    private MinigameTile _quizTile;
-    private EmptyTile _emptyTile;
-
+    private BoardGenerator _boardGenerator;
     private IObjectResolver _objectResolver;
 
-    public BoardManager(EmptyTile emptyTile, MinigameTile quizTile, IObjectResolver objectResolver)
+    public BoardManager(EmptyTile emptyTile,
+        MinigameTile quizTile,
+        IObjectResolver objectResolver,
+        BoardType boardType)
     {
-        _emptyTile = emptyTile;
-        _quizTile = quizTile;
-        _objectResolver = objectResolver;
+
+        _boardGenerator = CreateBoardGenerator(boardType);
+        _boardGenerator.InitBoardData(emptyTile, quizTile, objectResolver);
     }
 
     public void InitializeBoard()
     {
-        _tiles = new List<Tile>();
-
-        Bounds cameraBounds = GetCameraBounds(Camera.main);
-
-        float minX = cameraBounds.min.x;
-        float maxX = cameraBounds.max.x;
-        float minZ = cameraBounds.min.z;
-        float maxZ = cameraBounds.max.z;
-
-        for (float x = minX + spacingBetweenTiles; x < maxX; x += spacingBetweenTiles)
-        {
-            for (float z = minZ + spacingBetweenTiles; z < maxZ; z += spacingBetweenTiles)
-            {
-                Vector3 position = new Vector3(x, 0, z);
-                Tile tile = CreateTile(position);
-                _tiles.Add(tile);
-                if (z == minZ + spacingBetweenTiles)
-                {
-                    _firstRawTiles.Add(tile);
-                }
-            }
-        }
+        _boardGenerator.InitializeBoard();
     }
-
-    private Tile CreateTile(Vector3 position)
+    private BoardGenerator CreateBoardGenerator(BoardType boardType)
     {
-        int randomChoice = Random.Range(0, 5);
-
-        Tile tile = randomChoice == 0
-            ? _objectResolver.Instantiate(_quizTile, position, Quaternion.identity)
-            : _objectResolver.Instantiate(_emptyTile, position, Quaternion.identity);
-
-        tile.Initialize(position);
-        return tile;
+        return boardType switch
+        {
+            BoardType.Rectangle => new RectangleBoardGenerator(),
+            BoardType.Wavy => new WavyBoardGenerator(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
     public Tile GetNextTile(Tile currentTile)
     {
-        int currentIndex = _tiles.IndexOf(currentTile);
-
-        if (currentIndex >= 0)
-        {
-            int nextIndex = (currentIndex + 1) % _tiles.Count;
-
-            return _tiles[nextIndex];
-        }
-
-        Debug.LogError("Current tile not found in the tiles list!");
-        return null;
+        return _boardGenerator.GetNextTile(currentTile);
     }
 
     public Tile GetRandomTileInFirstRaw()
     {
-        var index = Random.Range(0, _firstRawTiles.Count);
-        return _firstRawTiles[index];
+        return _boardGenerator.GetRandomTileInFirstRaw();
     }
 
-    public static Bounds GetCameraBounds(Camera camera)
-    {
-        Vector3 cameraPos = camera.transform.position;
+}
 
-        float height = camera.orthographicSize * 2;
-        float width = height * camera.aspect;
-
-        float minX = cameraPos.x - width / 2;
-        float maxX = cameraPos.x + width / 2;
-        float minZ = cameraPos.z - height / 2;
-        float maxZ = cameraPos.z + height / 2;
-
-        return new Bounds(cameraPos, new Vector3(maxX - minX, height, maxZ - minZ));
-    }
+public enum BoardType
+{
+    Rectangle,
+    Wavy
 }

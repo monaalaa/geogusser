@@ -21,8 +21,8 @@ public class EmptyTile : Tile
     private void FloatText()
     {
         floatingNumber.transform
-            .DOMoveY(0, 0.5f)
-            .SetEase(Ease.OutQuad)
+            .DOMoveY(0, 0.2f)
+            .SetEase(Ease.InOutBounce)
             .OnComplete(() => floatingNumber.SetActive(false));
     }
 }
